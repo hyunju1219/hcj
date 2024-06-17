@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //JSON(javascript object notation) 데이터 전송 표준 객체
+        //로컬 저장소에는 문자열만 저장할 수 있기 때문에 JSON으로 바꿈
+        const user = {
+            username: "qqq",
+            password: "1234",
+            name: "name",
+        };
+
+        //객체 -> JSON
+        const jsonUser = JSON.stringify(user);
+        console.log(user);
+        console.log(jsonUser);
+        //JSON -> 객체
+        const jsonParseUser = JSON.parse(jsonUser);
+        console.log(user.username);
+        console.log(jsonParseUser.username);
+        console.log(jsonParseUser);
+
+        const users = [ user, { ...user, username: "bbb" }];
+        console.log(users);
+        const jsonUsers = JSON.stringify(users);
+        console.log(jsonUsers);
+        const jsonParseUsers = JSON.parse(jsonUsers);
+        console.log(jsonParseUsers);
+        
+
+        
+        /**
+         * "{
+         *      "key": "value",
+         *      "key2": "value2"
+         * }"
+         */
+    </script>
+</body>
+</html>

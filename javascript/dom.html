@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="main-box">
+        <div id="input1">
+            <input type="text" placeholder="이름">
+        </div>
+        <div id="input2">
+            <input type="text" placeholder="나이">
+        </div>
+    </div>
+    <div>
+        <button onclick="handleCheckBtnClick(event);">확인</button>
+    </div>
+    <script>
+        //1. 태그명으로 가져오기(리스트반환)
+        const bodyList = document.getElementsByTagName("body");
+        const body = bodyList[0]; //리스트로 가져오지만 body 태그는 1개라서 [0]
+        const divList = document.getElementsByTagName("div");
+
+        //2. 클래스명으로 가져오기(리스트반환)
+        // const divList = document.getElementsByTagName("div"); 같은 결과
+        const mainBoxList = body.getElementsByClassName("main-box"); //클래스로 가져온다고 되어있기 때문에 클래스명 앞에 .안붙임
+        // const mainBoxList = document.getElementsByClassName("main-box");
+
+
+        const input1 = mainBoxList[0]
+                        .getElementsByTagName("div")[0]
+                        .getElementsByTagName("input")[0];
+
+        const input1_1 = document.getElementsByTagName("input")[0];
+        //비구조할당으로 배열의 첫번째값 가져옴
+        //아이디는 고유값이기 때문에 document에서 사용해야함
+        const [ input1_1_1 ] = document.getElementById("input1").getElementsByTagName("input");
+
+        console.log(bodyList);
+        console.log({ body }); //객체값으로 보고싶을 경우 
+        console.log({ mainBox: divList[0] }); //인덱스번호는 키값으로 쓸 수 없기 때문에
+
+        console.log({ mainBox: mainBoxList[0] });
+        console.log({input1});
+        console.log(input1_1_1);
+//////////////////////////////////////////////////////////////
+        //QuerySelector
+        //선택자 사용 가능
+        const input1_1_1_1 = document.querySelector("body #input1 > input");
+        console.log(input1_1_1_1);
+        const inputList = document.querySelectorAll("input");
+        console.log(inputList);
+        //input이 여러개인데 All을 안쓰면 첫번째것만 가져옴
+        const input1_1_1_1_1 = document.querySelector("input");
+        console.log({ input1_1_1_1_1 });
+
+        const button = document.querySelector("button");
+        console.log(button.getAttribute("onclick"));
+        console.log(button.setAttribute("onclick", "alert('test');"));
+        console.log(button.onclick);
+        
+        //객체에 이벤트를 정의하는 법(익명함수)
+        // button.onclick = () => {
+        //     alert("test2");
+        // }
+        //함수대입
+        button.onclick = handleCheckBtnClick;
+        function handleCheckBtnClick(e) {
+            console.log(e);
+            // const [ input_name, input_age ] = document.querySelectorAll("input");
+            const input_name = document.querySelector("#input1 > input");
+            const input_age = document.querySelector("#input2 > input");
+            
+            if(!!input_name.value && !!input_age.value) {
+                alert(`이름 : ${input_name.value}\n나이 : ${input_age.value}`);
+            }else {
+                alert("값을 입력하세요");
+            } 
+        }
+        
+        
+
+    </script>
+</body>
+</html>

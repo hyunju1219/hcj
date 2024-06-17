@@ -9,7 +9,7 @@ function createUser(username, password, name, email) {
 
 function createUser2(username, password, name, email) {
     return {
-        ["username"]: username,
+        [username]: username,
         ["password"]: password,
         ["name"]: name,
         ["email"]: email
