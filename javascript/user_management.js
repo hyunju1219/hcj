@@ -1,5 +1,5 @@
 //inputMode = 1 > 추가
-//inputMode = 1 > 수정
+//inputMode = 2 > 수정
 let inputMode = 1;
 
 let userList = [];
@@ -22,7 +22,7 @@ function renderTable() {
     userTableBody.innerHTML = userList.map(({ id, name, username, password }, index) => {
         return `
             <tr>
-                <th><input type="checkbox" onchange="handleUsercheck(event)" name="${id}"></th>
+                <th><input type="checkbox" onchange="handleUsercheck(event)" value="${id}"></th>
                 <td>${index + 1}</td>
                 <td>${id}</td>
                 <td>${name}</td>
@@ -52,18 +52,31 @@ function handleUserInputKeyDown(e) {
             usernameInput.focus()
         }
         if(e.target.name === "username") {
-            
             passwordInput.focus();
         }
         if(e.target.name === "password") {
-            userList = [ ...userList, { ...user, id: getNewId()} ]; //주소가 같아도 값을 변경하기 위함
-            // userList = [ ...userList, user]; 현재 코드는 새로운 객체를 계속 생성하고 있기 때문에 user써도됨
+            if(inputMode === 1) {
+                userList = [ ...userList, { ...user, id: getNewId()} ]; 
+            }
+            if(inputMode === 2) {
+                let findIndex = -1;
+                for(let i = 0; i < userList.length; i++) {
+                    if(userList[i].id === user.id){
+                        findIndex = i;
+                        break;
+                    }
+                }
+                if(findIndex === -1) {
+                    alert("사용자 정보 수정 중 요류 발생. 관리자에게 문의하세요");
+                    return;
+                }
+                userList[findIndex] = user;
+             }
+           
             saveUserList();
             renderTable();
+            clearInputValue();
 
-            nameInput.value = emptyUser.name;
-            usernameInput.value = emptyUser.username;
-            passwordInput.value = emptyUser.password;
             nameInput.focus();
         }
     }
@@ -93,26 +106,48 @@ function getNewId() {
 }
 
 function handleUsercheck(e) {
-    console.log(e.target.checked);
-    const nameInput = document.querySelector(".name-input")
-    const passwordInput = document.querySelector(".password-input");
-    const usernameInput = document.querySelector(".username-input");
-    const checkboxList = document.querySelectorAll("input[type='checkbox']");
-    for(let i = 0; i < checkboxList.length; i++) {
-        const checkbox = checkboxList[i];
-        if(checkbox === e.target) continue;
-        
-        checkbox.checked = false;
+    const checkBoxList = document.querySelectorAll("input[type='checkbox']");
+    console.log(checkBoxList);
+    for(let checkBox of checkBoxList) {
+        if(checkBox === e.target) continue;
+        checkBox.checked = false;
     }
-    for(let i = 0; i < userList.length; i++) {
-        if(userList[i].id === parseInt(e.target.name)) {
-            nameInput.value = userList[i].name;
-            passwordInput.value = userList[i].password;
-            usernameInput.value = userList[i].username;
-            break;
+
+    if(e.target.checked) {
+        inputMode = 2;
+        const [ findUser ] = userList.filter(user => user.id === parseInt(e.target.value));
+        setInputValue(findUser);
+        user = {
+            ...findUser 
         }
+        return;
     }
+
+    clearInputValue();
+}
+
+function setInputValue(user) {
+    const nameInput = document.querySelector(".name-input");
+    const usernameInput = document.querySelector(".username-input");
+    const passwordInput = document.querySelector(".password-input");
     
-    console.log(e.target.name);
+    nameInput.value = user.name;
+    usernameInput.value = user.username;
+    passwordInput.value = user.password;
+}
+
+function clearInputValue() {
+    const nameInput = document.querySelector(".name-input");
+    const usernameInput = document.querySelector(".username-input");
+    const passwordInput = document.querySelector(".password-input");
+
+    nameInput.value = emptyUser.name;
+    usernameInput.value = emptyUser.username;
+    passwordInput.value = emptyUser.password;
+    
+    inputMode = 1;
+    user = {
+        ...emptyUser
+    }
     
 }
